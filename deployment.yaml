@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solar-dashboard-api
+  labels:
+    app: solar-dashboard-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solar-dashboard-api
+  template:
+    metadata:
+      labels:
+        app: solar-dashboard-api
+    spec:
+      containers:
+       - name: solar-dashboard-api
+         image: azrdevarc01.azurecr.io/solar-dashboard-api:latest
+         env:
+         - name: "PORT"
+           value: "8080"
+         imagePullPolicy: Always  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: solar-dashboard-api-lb-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: solar-dashboard-api
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
